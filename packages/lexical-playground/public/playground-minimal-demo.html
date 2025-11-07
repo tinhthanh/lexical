@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Minimal Mode</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      padding: 20px;
+      background: #f0f2f5;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 20px;
+      height: calc(100vh - 40px);
+    }
+
+    .iframe-panel {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header {
+      background: #28a745;
+      color: white;
+      padding: 12px 16px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #status {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    #status.connecting {
+      background: rgba(255,255,255,0.2);
+    }
+
+    #status.connected {
+      background: rgba(255,255,255,0.3);
+    }
+
+    #status.error {
+      background: #dc3545;
+    }
+
+    iframe {
+      flex: 1;
+      border: none;
+      width: 100%;
+    }
+
+    .controls-panel {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .controls-content {
+      padding: 16px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .control-group {
+      margin-bottom: 16px;
+    }
+
+    .control-group label {
+      display: block;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+
+    button {
+      width: 100%;
+      padding: 8px 12px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.2s;
+      margin-bottom: 6px;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+
+    button.secondary {
+      background: #6c757d;
+    }
+
+    button.secondary:hover {
+      background: #545b62;
+    }
+
+    button.danger {
+      background: #dc3545;
+    }
+
+    button.danger:hover {
+      background: #c82333;
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    #output {
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      min-height: 120px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 11px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .info-box {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      padding: 10px;
+      margin-bottom: 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .info-box strong {
+      color: #155724;
+    }
+
+    @media (max-width: 1200px) {
+      .layout {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+
+      .iframe-panel {
+        height: 600px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="layout">
+      <!-- Left: Iframe with minimal playground -->
+      <div class="iframe-panel">
+        <div class="panel-header">
+          <span>📝 Editor Only (Minimal Mode)</span>
+          <span id="status" class="connecting">⏳ Connecting...</span>
+        </div>
+        <iframe id="playground-iframe" src="http://localhost:3000/?mode=minimal"></iframe>
+      </div>
+
+      <!-- Right: Controls -->
+      <div class="controls-panel">
+        <div class="panel-header">Controls</div>
+        <div class="controls-content">
+          <div class="info-box">
+            <strong>Minimal Mode:</strong> Only the editor is visible. Perfect for embedding in your app!
+          </div>
+
+          <!-- Set Content -->
+          <div class="control-group">
+            <label>✏️ Set Content:</label>
+            <input type="text" id="content-input" placeholder="Enter text..." value="This is a clean editor! ✨">
+            <button onclick="setContent()">Set Content</button>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="control-group">
+            <label>⚡ Quick Actions:</label>
+            <div class="button-group">
+              <button onclick="getContent()">Get Content</button>
+              <button class="danger" onclick="clearEditor()">Clear</button>
+            </div>
+            <div class="button-group">
+              <button class="secondary" onclick="getStats()">Stats</button>
+              <button class="secondary" onclick="getContentHtml()">Get HTML</button>
+            </div>
+          </div>
+
+          <!-- Editable Toggle -->
+          <div class="control-group">
+            <label>🔒 Editor Mode:</label>
+            <div class="button-group">
+              <button class="secondary" onclick="setEditable(false)">Read Only</button>
+              <button onclick="setEditable(true)">Editable</button>
+            </div>
+          </div>
+
+          <!-- Output Log -->
+          <div class="control-group">
+            <label>📋 Log:</label>
+            <div id="output">Waiting for connection...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load Penpal from CDN -->
+  <script src="https://unpkg.com/penpal@^7/dist/penpal.min.js"></script>
+
+  <script>
+    let remote = null;
+    const statusElement = document.getElementById('status');
+    const outputElement = document.getElementById('output');
+
+    function log(message) {
+      const timestamp = new Date().toLocaleTimeString();
+      const logEntry = `[${timestamp}] ${message}\n`;
+      outputElement.textContent = logEntry + outputElement.textContent;
+      
+      const lines = outputElement.textContent.split('\n');
+      if (lines.length > 30) {
+        outputElement.textContent = lines.slice(0, 30).join('\n');
+      }
+    }
+
+    // Setup Penpal connection
+    (async function() {
+      const { WindowMessenger, connect } = Penpal;
+      
+      const iframe = document.getElementById('playground-iframe');
+      
+      iframe.addEventListener('load', async () => {
+        log('🔄 Iframe loaded, connecting...');
+        
+        const messenger = new WindowMessenger({
+          remoteWindow: iframe.contentWindow,
+          allowedOrigins: ['http://localhost:3000'],
+        });
+
+        const connection = connect({
+          messenger,
+          methods: {
+            onReady() {
+              log('✅ Editor ready!');
+              return Promise.resolve();
+            },
+            onContentChange(content) {
+              log(`📝 Changed (${content.length} chars)`);
+              return Promise.resolve();
+            },
+          },
+        });
+
+        try {
+          remote = await connection.promise;
+          statusElement.textContent = '✅ Connected';
+          statusElement.className = 'connected';
+          log('🔗 Connected successfully!');
+        } catch (error) {
+          console.error('Connection error:', error);
+          statusElement.textContent = '❌ Error';
+          statusElement.className = 'error';
+          log(`❌ Error: ${error.message}`);
+        }
+      });
+    })();
+
+    // Control functions
+    async function getContent() {
+      if (!remote) return alert('Not connected!');
+      try {
+        const content = await remote.getContent();
+        log(`📖 Got content (${content.length} chars)`);
+        alert(`Content:\n\n${content}`);
+      } catch (error) {
+        log(`❌ Error: ${error.message}`);
+      }
+    }
+
+    async function setContent() {
+      if (!remote) return alert('Not connected!');
+      const input = document.getElementById('content-input');
+      try {
+        await remote.setContent(input.value);
+        log(`✏️ Set: "${input.value}"`);
+      } catch (error) {
+        log(`❌ Error: ${error.message}`);
+      }
+    }
+
+    async function clearEditor() {
+      if (!remote) return alert('Not connected!');
+      try {
+        await remote.clear();
+        log('🗑️ Cleared');
+      } catch (error) {
+        log(`❌ Error: ${error.message}`);
+      }
+    }
+
+    async function getStats() {
+      if (!remote) return alert('Not connected!');
+      try {
+        const words = await remote.getWordCount();
+        const chars = await remote.getCharacterCount();
+        const empty = await remote.isEmpty();
+        
+        log(`📊 ${words} words, ${chars} chars`);
+        alert(`📊 Stats:\n\nWords: ${words}\nCharacters: ${chars}\nEmpty: ${empty ? 'Yes' : 'No'}`);
+      } catch (error) {
+        log(`❌ Error: ${error.message}`);
+      }
+    }
+
+    async function getContentHtml() {
+      if (!remote) return alert('Not connected!');
+      try {
+        log('📥 Calling getHTML()...');
+        console.log('Calling remote.getHTML()...');
+
+        const html = await remote.getHTML();
+
+        console.log('getHTML() returned:', html);
+        log(`✅ Got HTML (${html.length} chars)`);
+        alert(`HTML:\n\n${html.substring(0, 300)}${html.length > 300 ? '...' : ''}`);
+      } catch (error) {
+        log(`❌ Error: ${error.message}`);
+        console.error('getHTML error:', error);
+      }
+    }
+
+    async function setEditable(editable) {
+      if (!remote) return alert('Not connected!');
+      try {
+        await remote.setEditable(editable);
+        log(`${editable ? '✏️ Editable' : '🔒 Read-only'}`);
+      } catch (error) {
+        log(`❌ Error: ${error.message}`);
+      }
+    }
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,91 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
+/* Styles for iframe mode - hide unnecessary UI elements */
+body.iframe-mode {
+  /* Hide header/logo */
+  header {
+    display: none !important;
+  }
+
+  /* Hide settings button */
+  .editor-shell button.action-button.settings {
+    display: none !important;
+  }
+
+  /* Hide tree view toggle */
+  .tree-view-output {
+    display: none !important;
+  }
+
+  /* Hide debug view */
+  .debug-timetravel-panel {
+    display: none !important;
+  }
+
+  /* Hide actions bar at bottom */
+  .actions {
+    display: none !important;
+  }
+
+  /* Hide collaboration UI */
+  .collaboration-ui {
+    display: none !important;
+  }
+
+  /* Make editor take full height */
+  .editor-shell {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Adjust editor container */
+  .editor-container {
+    flex: 1 !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
+  /* Make editor scroller scrollable */
+  .editor-scroller {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: 0 !important;
+  }
+
+  /* Remove margins from body */
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Optional: Minimal mode - only show editor, hide toolbar too */
+body.iframe-mode.minimal {
+  .toolbar {
+    display: none !important;
+  }
+
+  .editor-shell {
+    border: none !important;
+  }
+}
+
+/* Optional: Clean mode - show toolbar but hide other elements */
+body.iframe-mode.clean {
+  /* Keep toolbar visible */
+  .toolbar {
+    border-radius: 0 !important;
+  }
+}
+

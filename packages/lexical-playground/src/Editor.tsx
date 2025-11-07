@@ -68,6 +68,7 @@ import MarkdownShortcutPlugin from './plugins/MarkdownShortcutPlugin';
 import {MaxLengthPlugin} from './plugins/MaxLengthPlugin';
 import MentionsPlugin from './plugins/MentionsPlugin';
 import PageBreakPlugin from './plugins/PageBreakPlugin';
+import PenpalPlugin from './plugins/PenpalPlugin';
 import PollPlugin from './plugins/PollPlugin';
 import ShortcutsPlugin from './plugins/ShortcutsPlugin';
 import SpecialTextPlugin from './plugins/SpecialTextPlugin';
@@ -298,6 +299,7 @@ export default function Editor(): JSX.Element {
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
         {shouldUseLexicalContextMenu && <ContextMenuPlugin />}
         {shouldAllowHighlightingWithBrackets && <SpecialTextPlugin />}
+        <PenpalPlugin />
         <ActionsPlugin
           shouldPreserveNewLinesInMarkdown={shouldPreserveNewLinesInMarkdown}
           useCollabV2={useCollabV2}

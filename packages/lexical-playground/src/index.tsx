@@ -11,6 +11,7 @@
 // eslint-disable-next-line simple-import-sort/imports
 import setupEnv from './setupEnv';
 import './index.css';
+import './iframe-mode.css';
 
 import * as React from 'react';
 import {createRoot} from 'react-dom/client';

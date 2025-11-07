@@ -26,7 +26,6 @@ import {SettingsContext, useSettings} from './context/SettingsContext';
 import {SharedHistoryContext} from './context/SharedHistoryContext';
 import {ToolbarContext} from './context/ToolbarContext';
 import Editor from './Editor';
-import logo from './images/logo.svg';
 import PlaygroundNodes from './nodes/PlaygroundNodes';
 import DocsPlugin from './plugins/DocsPlugin';
 import PasteLogPlugin from './plugins/PasteLogPlugin';
@@ -148,11 +147,6 @@ function App(): JSX.Element {
         <SharedHistoryContext>
           <TableContext>
             <ToolbarContext>
-              <header>
-                <a href="https://lexical.dev" target="_blank" rel="noreferrer">
-                  <img src={logo} alt="Lexical Logo" />
-                </a>
-              </header>
               <div className="editor-shell">
                 <Editor />
               </div>
@@ -176,7 +170,7 @@ export default function PlaygroundApp(): JSX.Element {
       <FlashMessageContext>
         <App />
       </FlashMessageContext>
-      <a
+      {/* <a
         href="https://github.com/facebook/lexical/tree/main/packages/lexical-playground"
         className="github-corner"
         aria-label="View source on GitHub">
@@ -209,7 +203,7 @@ export default function PlaygroundApp(): JSX.Element {
             className="octo-body"
           />
         </svg>
-      </a>
+      </a> */}
     </SettingsContext>
   );
 }
