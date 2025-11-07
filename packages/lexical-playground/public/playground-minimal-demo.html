@@ -281,21 +281,8 @@
 
       // Auto-detect base URL (works for both dev and production)
       function getBaseUrl() {
-        // In production with base path: window.location.origin + base path
-        // In development: http://localhost:3000
         const origin = window.location.origin;
-        const pathname = window.location.pathname;
-
-        // Extract base path from pathname (e.g., /lexical-playground/playground-minimal-demo.html -> /lexical-playground)
-        const basePath = pathname.substring(0, pathname.lastIndexOf('/'));
-
-        // If we're on localhost:3000 or just serving from root, use origin only
-        if (origin.includes('localhost:3000') || basePath === '') {
-          return origin;
-        }
-
-        // Otherwise, use origin + base path
-        return origin + basePath;
+        return origin;
       }
 
       const BASE_URL = getBaseUrl();
