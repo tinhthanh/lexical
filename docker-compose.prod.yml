@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  app:
+    image: ${DOCKERHUB_USERNAME}/${SERVICE_NAME}:latest
+    container_name: ${SERVICE_NAME}
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'wget',
+          '--no-verbose',
+          '--tries=1',
+          '--spider',
+          'http://localhost/health',
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    labels:
+      - 'traefik.enable=true'
+      # === CẤU HÌNH ROUTER ===
+      - 'traefik.http.routers.${SERVICE_NAME}.rule=(Host(`ui.phanmemvet.vn`) || Host(`ui.petplus.vn`)) && PathPrefix(`/${SERVICE_NAME}`)'
+      - 'traefik.http.routers.${SERVICE_NAME}.entrypoints=web'
+      - 'traefik.http.routers.${SERVICE_NAME}.service=${SERVICE_NAME}-svc'
+      - 'traefik.http.routers.${SERVICE_NAME}.middlewares=strip-prefix-${SERVICE_NAME}'
+      # === CẤU HÌNH MIDDLEWARE ===
+      - 'traefik.http.middlewares.strip-prefix-${SERVICE_NAME}.stripprefix.prefixes=/${SERVICE_NAME}'
+      # === CẤU HÌNH SERVICE CỦA TRAEFIK ===
+      - 'traefik.http.services.${SERVICE_NAME}-svc.loadbalancer.server.port=80'
+
+networks:
+  traefik_proxy:
+    external: true
