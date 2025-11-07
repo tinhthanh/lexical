@@ -1,539 +1,603 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Playground Iframe Demo</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Playground Iframe Demo</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      padding: 20px;
-      background: #f0f2f5;
-    }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+          Cantarell, sans-serif;
+        padding: 20px;
+        background: #f0f2f5;
+      }
 
-    .container {
-      max-width: 1600px;
-      margin: 0 auto;
-    }
+      .container {
+        max-width: 1600px;
+        margin: 0 auto;
+      }
 
-    h1 {
-      margin-bottom: 10px;
-      color: #333;
-    }
+      h1 {
+        margin-bottom: 10px;
+        color: #333;
+      }
 
-    .subtitle {
-      color: #666;
-      margin-bottom: 20px;
-      font-size: 14px;
-    }
+      .subtitle {
+        color: #666;
+        margin-bottom: 20px;
+        font-size: 14px;
+      }
 
-    .layout {
-      display: grid;
-      grid-template-columns: 1fr 400px;
-      gap: 20px;
-      height: calc(100vh - 40px);
-    }
-
-    .iframe-panel {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .panel-header {
-      background: #444;
-      color: white;
-      padding: 12px 16px;
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    #status {
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    #status.connecting {
-      background: rgba(255,255,255,0.2);
-    }
-
-    #status.connected {
-      background: #28a745;
-    }
-
-    #status.error {
-      background: #dc3545;
-    }
-
-    iframe {
-      flex: 1;
-      border: none;
-      width: 100%;
-    }
-
-    .controls-panel {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .controls-content {
-      padding: 16px;
-      overflow-y: auto;
-      flex: 1;
-    }
-
-    .control-group {
-      margin-bottom: 20px;
-    }
-
-    .control-group label {
-      display: block;
-      font-weight: 600;
-      color: #555;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-
-    input[type="text"],
-    textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 14px;
-      font-family: inherit;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 100px;
-      font-family: monospace;
-      font-size: 12px;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px 16px;
-      background: #444;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      transition: background 0.2s;
-      margin-bottom: 8px;
-    }
-
-    button:hover {
-      background: #0056b3;
-    }
-
-    button.secondary {
-      background: #6c757d;
-    }
-
-    button.secondary:hover {
-      background: #545b62;
-    }
-
-    button.success {
-      background: #28a745;
-    }
-
-    button.success:hover {
-      background: #218838;
-    }
-
-    button.danger {
-      background: #dc3545;
-    }
-
-    button.danger:hover {
-      background: #c82333;
-    }
-
-    .button-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-
-    #output {
-      background: #f8f9fa;
-      padding: 12px;
-      border-radius: 4px;
-      border: 1px solid #ddd;
-      min-height: 150px;
-      max-height: 300px;
-      overflow-y: auto;
-      font-family: monospace;
-      font-size: 12px;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-
-    .info-box {
-      background: #e7f3ff;
-      border-left: 4px solid #007bff;
-      padding: 12px;
-      margin-bottom: 16px;
-      border-radius: 4px;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .info-box code {
-      background: rgba(0,0,0,0.1);
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-family: monospace;
-    }
-
-    @media (max-width: 1200px) {
       .layout {
-        grid-template-columns: 1fr;
-        height: auto;
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 20px;
+        height: calc(100vh - 40px);
       }
 
       .iframe-panel {
-        height: 600px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
       }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
 
-    <div class="layout">
-      <!-- Left: Iframe with full playground -->
-      <div class="iframe-panel">
-        <div class="panel-header">
-          <span> Playground (http://localhost:3000)</span>
-          <span id="status" class="connecting">⏳ Connecting...</span>
+      .panel-header {
+        background: #444;
+        color: white;
+        padding: 12px 16px;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      #status {
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      #status.connecting {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      #status.connected {
+        background: #28a745;
+      }
+
+      #status.error {
+        background: #dc3545;
+      }
+
+      iframe {
+        flex: 1;
+        border: none;
+        width: 100%;
+      }
+
+      .controls-panel {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .controls-content {
+        padding: 16px;
+        overflow-y: auto;
+        flex: 1;
+      }
+
+      .control-group {
+        margin-bottom: 20px;
+      }
+
+      .control-group label {
+        display: block;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+
+      input[type='text'],
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        font-family: inherit;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+        font-family: monospace;
+        font-size: 12px;
+      }
+
+      button {
+        width: 100%;
+        padding: 10px 16px;
+        background: #444;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: background 0.2s;
+        margin-bottom: 8px;
+      }
+
+      button:hover {
+        background: #0056b3;
+      }
+
+      button.secondary {
+        background: #6c757d;
+      }
+
+      button.secondary:hover {
+        background: #545b62;
+      }
+
+      button.success {
+        background: #28a745;
+      }
+
+      button.success:hover {
+        background: #218838;
+      }
+
+      button.danger {
+        background: #dc3545;
+      }
+
+      button.danger:hover {
+        background: #c82333;
+      }
+
+      .button-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      #output {
+        background: #f8f9fa;
+        padding: 12px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        min-height: 150px;
+        max-height: 300px;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 12px;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+
+      .info-box {
+        background: #e7f3ff;
+        border-left: 4px solid #007bff;
+        padding: 12px;
+        margin-bottom: 16px;
+        border-radius: 4px;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .info-box code {
+        background: rgba(0, 0, 0, 0.1);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: monospace;
+      }
+
+      @media (max-width: 1200px) {
+        .layout {
+          grid-template-columns: 1fr;
+          height: auto;
+        }
+
+        .iframe-panel {
+          height: 600px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="layout">
+        <!-- Left: Iframe with full playground -->
+        <div class="iframe-panel">
+          <div class="panel-header">
+            <span id="iframe-title">📝 Playground</span>
+            <span class="connecting" id="status">⏳ Connecting...</span>
+          </div>
+          <iframe id="playground-iframe"></iframe>
         </div>
-        <iframe id="playground-iframe" src="http://localhost:3000/"></iframe>
-      </div>
 
-      <!-- Right: Controls -->
-      <div class="controls-panel">
-        <div class="panel-header">Parent Window Controls</div>
-        <div class="controls-content">
-          <div class="info-box">
-            This demo embeds the <strong>full Playground</strong> in an iframe. 
-            You can control it programmatically using the buttons below.
-          </div>
-
-          <!-- Get Content -->
-          <div class="control-group">
-            <label>📖 Get Content:</label>
-            <button onclick="getContent()">Get Text Content</button>
-          </div>
-
-          <!-- Set Content -->
-          <div class="control-group">
-            <label>✏️ Set Content:</label>
-            <input type="text" id="content-input" placeholder="Enter text..." value="Hello from parent window! 🎉">
-            <button onclick="setContent()">Set Content</button>
-          </div>
-
-          <!-- Editor State -->
-          <div class="control-group">
-            <label>💾 Editor State (JSON):</label>
-            <div class="button-group">
-              <button class="secondary" onclick="getEditorState()">Get State</button>
-              <button class="secondary" onclick="setEditorState()">Set State</button>
+        <!-- Right: Controls -->
+        <div class="controls-panel">
+          <div class="panel-header">Parent Window Controls</div>
+          <div class="controls-content">
+            <div class="info-box">
+              This demo embeds the
+              <strong>full Playground</strong>
+              in an iframe. You can control it programmatically using the
+              buttons below.
             </div>
-            <textarea id="state-textarea" placeholder="Editor state JSON..."></textarea>
-          </div>
 
-          <!-- Actions -->
-          <div class="control-group">
-            <label>⚡ Actions:</label>
-            <div class="button-group">
-              <button class="success" onclick="focusEditor()">Focus</button>
-              <button class="danger" onclick="clearEditor()">Clear</button>
+            <!-- Get Content -->
+            <div class="control-group">
+              <label>📖 Get Content:</label>
+              <button onclick="getContent()">Get Text Content</button>
             </div>
-            <div class="button-group">
-              <button class="secondary" onclick="getContentHtml()">Get HTML</button>
-              <button class="secondary" onclick="getMarkdown()">Get Markdown</button>
-            </div>
-            <div class="button-group">
-              <button class="secondary" onclick="getStats()">Get Stats</button>
-              <button class="secondary" onclick="checkEmpty()">Is Empty?</button>
-            </div>
-            <div class="button-group">
-              <button class="secondary" onclick="setEditable(false)">Read Only</button>
-              <button class="success" onclick="setEditable(true)">Editable</button>
-            </div>
-          </div>
 
-          <!-- Output Log -->
-          <div class="control-group">
-            <label>📋 Event Log:</label>
-            <div id="output">Waiting for connection...</div>
+            <!-- Set Content -->
+            <div class="control-group">
+              <label>✏️ Set Content:</label>
+              <input
+                id="content-input"
+                placeholder="Enter text..."
+                type="text"
+                value="Hello from parent window! 🎉" />
+              <button onclick="setContent()">Set Content</button>
+            </div>
+
+            <!-- Editor State -->
+            <div class="control-group">
+              <label>💾 Editor State (JSON):</label>
+              <div class="button-group">
+                <button class="secondary" onclick="getEditorState()">
+                  Get State
+                </button>
+                <button class="secondary" onclick="setEditorState()">
+                  Set State
+                </button>
+              </div>
+              <textarea
+                id="state-textarea"
+                placeholder="Editor state JSON..."></textarea>
+            </div>
+
+            <!-- Actions -->
+            <div class="control-group">
+              <label>⚡ Actions:</label>
+              <div class="button-group">
+                <button class="success" onclick="focusEditor()">Focus</button>
+                <button class="danger" onclick="clearEditor()">Clear</button>
+              </div>
+              <div class="button-group">
+                <button class="secondary" onclick="getContentHtml()">
+                  Get HTML
+                </button>
+                <button class="secondary" onclick="getMarkdown()">
+                  Get Markdown
+                </button>
+              </div>
+              <div class="button-group">
+                <button class="secondary" onclick="getStats()">
+                  Get Stats
+                </button>
+                <button class="secondary" onclick="checkEmpty()">
+                  Is Empty?
+                </button>
+              </div>
+              <div class="button-group">
+                <button class="secondary" onclick="setEditable(false)">
+                  Read Only
+                </button>
+                <button class="success" onclick="setEditable(true)">
+                  Editable
+                </button>
+              </div>
+            </div>
+
+            <!-- Output Log -->
+            <div class="control-group">
+              <label>📋 Event Log:</label>
+              <div id="output">Waiting for connection...</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Load Penpal from CDN -->
-  <script src="https://unpkg.com/penpal@^7/dist/penpal.min.js"></script>
+    <!-- Load Penpal from CDN -->
+    <script src="https://unpkg.com/penpal@^7/dist/penpal.min.js"></script>
 
-  <script>
-    let remote = null;
-    const statusElement = document.getElementById('status');
-    const outputElement = document.getElementById('output');
+    <script>
+      let remote = null;
+      const statusElement = document.getElementById('status');
+      const outputElement = document.getElementById('output');
 
-    function log(message) {
-      const timestamp = new Date().toLocaleTimeString();
-      const logEntry = `[${timestamp}] ${message}\n`;
-      outputElement.textContent = logEntry + outputElement.textContent;
-      
-      // Keep only last 50 lines
-      const lines = outputElement.textContent.split('\n');
-      if (lines.length > 50) {
-        outputElement.textContent = lines.slice(0, 50).join('\n');
-      }
-    }
+      // Auto-detect base URL (works for both dev and production)
+      function getBaseUrl() {
+        // In production with base path: window.location.origin + base path
+        // In development: http://localhost:3000
+        const origin = window.location.origin;
+        const pathname = window.location.pathname;
 
-    // Setup Penpal connection
-    (async function() {
-      const { WindowMessenger, connect } = Penpal;
-      
-      const iframe = document.getElementById('playground-iframe');
-      
-      // Wait for iframe to load
-      iframe.addEventListener('load', async () => {
-        log('🔄 Iframe loaded, establishing connection...');
-        
-        const messenger = new WindowMessenger({
-          remoteWindow: iframe.contentWindow,
-          allowedOrigins: ['http://localhost:3000'],
-        });
+        // Extract base path from pathname (e.g., /lexical-playground/playground-iframe-demo.html -> /lexical-playground)
+        const basePath = pathname.substring(0, pathname.lastIndexOf('/'));
 
-        const connection = connect({
-          messenger,
-          methods: {
-            // Called when playground is ready
-            onReady() {
-              log('✅ Playground is ready!');
-              return Promise.resolve();
-            },
-
-            // Called when content changes
-            onContentChange(content) {
-              log(`📝 Content changed (${content.length} chars)`);
-              return Promise.resolve();
-            },
-          },
-        });
-
-        try {
-          remote = await connection.promise;
-          statusElement.textContent = '✅ Connected';
-          statusElement.className = 'connected';
-          log('🔗 Penpal connection established successfully!');
-        } catch (error) {
-          console.error('Failed to establish connection:', error);
-          statusElement.textContent = '❌ Error';
-          statusElement.className = 'error';
-          log(`❌ Connection error: ${error.message}`);
+        // If we're on localhost:3000 or just serving from root, use origin only
+        if (origin.includes('localhost:3000') || basePath === '') {
+          return origin;
         }
+
+        // Otherwise, use origin + base path
+        return origin + basePath;
+      }
+
+      const BASE_URL = getBaseUrl();
+      console.log('Base URL detected:', BASE_URL);
+
+      // Set iframe src and title dynamically
+      document.addEventListener('DOMContentLoaded', () => {
+        const iframe = document.getElementById('playground-iframe');
+        const title = document.getElementById('iframe-title');
+
+        iframe.src = BASE_URL + '/';
+        title.textContent = `📝 Playground (${BASE_URL})`;
       });
-    })();
 
-    // Control functions
-    async function getContent() {
-      if (!remote) {
-        alert('Not connected yet!');
-        return;
-      }
-      try {
-        const content = await remote.getContent();
-        log(`📖 Content retrieved (${content.length} chars)`);
-        alert(`Content:\n\n${content.substring(0, 500)}${content.length > 500 ? '...' : ''}`);
-      } catch (error) {
-        log(`❌ Error: ${error.message}`);
-      }
-    }
+      function log(message) {
+        const timestamp = new Date().toLocaleTimeString();
+        const logEntry = `[${timestamp}] ${message}\n`;
+        outputElement.textContent = logEntry + outputElement.textContent;
 
-    async function setContent() {
-      if (!remote) {
-        alert('Not connected yet!');
-        return;
+        // Keep only last 50 lines
+        const lines = outputElement.textContent.split('\n');
+        if (lines.length > 50) {
+          outputElement.textContent = lines.slice(0, 50).join('\n');
+        }
       }
-      const input = document.getElementById('content-input');
-      const content = input.value;
-      try {
-        await remote.setContent(content);
-        log(`✏️ Content set: "${content}"`);
-      } catch (error) {
-        log(`❌ Error: ${error.message}`);
-      }
-    }
 
-    async function clearEditor() {
-      if (!remote) {
-        alert('Not connected yet!');
-        return;
-      }
-      try {
-        await remote.clear();
-        log('🗑️ Editor cleared');
-      } catch (error) {
-        log(`❌ Error: ${error.message}`);
-      }
-    }
+      // Setup Penpal connection
+      (async function () {
+        const {WindowMessenger, connect} = Penpal;
 
-    async function focusEditor() {
-      if (!remote) {
-        alert('Not connected yet!');
-        return;
-      }
-      try {
-        await remote.focus();
-        log('🎯 Editor focused');
-      } catch (error) {
-        log(`❌ Error: ${error.message}`);
-      }
-    }
+        const iframe = document.getElementById('playground-iframe');
 
-    async function getEditorState() {
-      if (!remote) {
-        alert('Not connected yet!');
-        return;
-      }
-      try {
-        const state = await remote.getEditorState();
-        const stateJson = JSON.stringify(state, null, 2);
-        document.getElementById('state-textarea').value = stateJson;
-        log('📋 Editor state retrieved');
-      } catch (error) {
-        log(`❌ Error: ${error.message}`);
-      }
-    }
+        // Wait for iframe to load
+        iframe.addEventListener('load', async () => {
+          log('🔄 Iframe loaded, establishing connection...');
 
-    async function setEditorState() {
-      if (!remote) {
-        alert('Not connected yet!');
-        return;
-      }
-      const textarea = document.getElementById('state-textarea');
-      try {
-        const stateJson = JSON.parse(textarea.value);
-        await remote.setEditorState(stateJson);
-        log('📥 Editor state set');
-      } catch (error) {
-        log(`❌ Error: ${error.message}`);
-      }
-    }
+          const messenger = new WindowMessenger({
+            remoteWindow: iframe.contentWindow,
+            allowedOrigins: [BASE_URL],
+          });
 
-    async function getContentHtml() {
-      console.warn('getHTML() called');
-      if (!remote) {
-        alert('Not connected yet!');
-        return;
-      }
-      try {
-        log('📥 Calling getHTML()...');
-        console.log('Calling remote.getHTML()...');
+          const connection = connect({
+            messenger,
+            methods: {
+              // Called when playground is ready
+              onReady() {
+                log('✅ Playground is ready!');
+                return Promise.resolve();
+              },
 
-        const html = await remote.getHTML();
+              // Called when content changes
+              onContentChange(content) {
+                log(`📝 Content changed (${content.length} chars)`);
+                return Promise.resolve();
+              },
+            },
+          });
 
-        console.log('getHTML() returned:', html);
-        log(`✅ HTML retrieved (${html.length} chars)`);
-        alert(`HTML:\n\n${html.substring(0, 500)}${html.length > 500 ? '...' : ''}`);
-      } catch (error) {
-        log(`❌ Error: ${error.message}`);
-        console.error('getHTML error:', error);
-      }
-    }
+          try {
+            remote = await connection.promise;
+            statusElement.textContent = '✅ Connected';
+            statusElement.className = 'connected';
+            log('🔗 Penpal connection established successfully!');
+          } catch (error) {
+            console.error('Failed to establish connection:', error);
+            statusElement.textContent = '❌ Error';
+            statusElement.className = 'error';
+            log(`❌ Connection error: ${error.message}`);
+          }
+        });
+      })();
 
-    async function getMarkdown() {
-      if (!remote) {
-        alert('Not connected yet!');
-        return;
+      // Control functions
+      async function getContent() {
+        if (!remote) {
+          alert('Not connected yet!');
+          return;
+        }
+        try {
+          const content = await remote.getContent();
+          log(`📖 Content retrieved (${content.length} chars)`);
+          alert(
+            `Content:\n\n${content.substring(0, 500)}${content.length > 500 ? '...' : ''}`,
+          );
+        } catch (error) {
+          log(`❌ Error: ${error.message}`);
+        }
       }
-      try {
-        const markdown = await remote.getMarkdown();
-        log(`📝 Markdown retrieved (${markdown.length} chars)`);
-        alert(`Markdown:\n\n${markdown.substring(0, 500)}${markdown.length > 500 ? '...' : ''}`);
-      } catch (error) {
-        log(`❌ Error: ${error.message}`);
-      }
-    }
 
-    async function getStats() {
-      if (!remote) {
-        alert('Not connected yet!');
-        return;
+      async function setContent() {
+        if (!remote) {
+          alert('Not connected yet!');
+          return;
+        }
+        const input = document.getElementById('content-input');
+        const content = input.value;
+        try {
+          await remote.setContent(content);
+          log(`✏️ Content set: "${content}"`);
+        } catch (error) {
+          log(`❌ Error: ${error.message}`);
+        }
       }
-      try {
-        const wordCount = await remote.getWordCount();
-        const charCount = await remote.getCharacterCount();
-        const isEmpty = await remote.isEmpty();
-        const isEditable = await remote.isEditable();
 
-        const stats = `📊 Editor Statistics:\n\n` +
-          `Words: ${wordCount}\n` +
-          `Characters: ${charCount}\n` +
-          `Empty: ${isEmpty ? 'Yes' : 'No'}\n` +
-          `Editable: ${isEditable ? 'Yes' : 'No'}`;
+      async function clearEditor() {
+        if (!remote) {
+          alert('Not connected yet!');
+          return;
+        }
+        try {
+          await remote.clear();
+          log('🗑️ Editor cleared');
+        } catch (error) {
+          log(`❌ Error: ${error.message}`);
+        }
+      }
 
-        log(`📊 Stats: ${wordCount} words, ${charCount} chars`);
-        alert(stats);
-      } catch (error) {
-        log(`❌ Error: ${error.message}`);
+      async function focusEditor() {
+        if (!remote) {
+          alert('Not connected yet!');
+          return;
+        }
+        try {
+          await remote.focus();
+          log('🎯 Editor focused');
+        } catch (error) {
+          log(`❌ Error: ${error.message}`);
+        }
       }
-    }
 
-    async function checkEmpty() {
-      if (!remote) {
-        alert('Not connected yet!');
-        return;
+      async function getEditorState() {
+        if (!remote) {
+          alert('Not connected yet!');
+          return;
+        }
+        try {
+          const state = await remote.getEditorState();
+          const stateJson = JSON.stringify(state, null, 2);
+          document.getElementById('state-textarea').value = stateJson;
+          log('📋 Editor state retrieved');
+        } catch (error) {
+          log(`❌ Error: ${error.message}`);
+        }
       }
-      try {
-        const isEmpty = await remote.isEmpty();
-        log(`🔍 Is empty: ${isEmpty}`);
-        alert(`Editor is ${isEmpty ? 'empty' : 'not empty'}`);
-      } catch (error) {
-        log(`❌ Error: ${error.message}`);
-      }
-    }
 
-    async function setEditable(editable) {
-      if (!remote) {
-        alert('Not connected yet!');
-        return;
+      async function setEditorState() {
+        if (!remote) {
+          alert('Not connected yet!');
+          return;
+        }
+        const textarea = document.getElementById('state-textarea');
+        try {
+          const stateJson = JSON.parse(textarea.value);
+          await remote.setEditorState(stateJson);
+          log('📥 Editor state set');
+        } catch (error) {
+          log(`❌ Error: ${error.message}`);
+        }
       }
-      try {
-        await remote.setEditable(editable);
-        log(`${editable ? '✏️' : '🔒'} Editor set to ${editable ? 'editable' : 'read-only'}`);
-      } catch (error) {
-        log(`❌ Error: ${error.message}`);
+
+      async function getContentHtml() {
+        console.warn('getHTML() called');
+        if (!remote) {
+          alert('Not connected yet!');
+          return;
+        }
+        try {
+          log('📥 Calling getHTML()...');
+          console.log('Calling remote.getHTML()...');
+
+          const html = await remote.getHTML();
+
+          console.log('getHTML() returned:', html);
+          log(`✅ HTML retrieved (${html.length} chars)`);
+          alert(
+            `HTML:\n\n${html.substring(0, 500)}${html.length > 500 ? '...' : ''}`,
+          );
+        } catch (error) {
+          log(`❌ Error: ${error.message}`);
+          console.error('getHTML error:', error);
+        }
       }
-    }
-  </script>
-</body>
+
+      async function getMarkdown() {
+        if (!remote) {
+          alert('Not connected yet!');
+          return;
+        }
+        try {
+          const markdown = await remote.getMarkdown();
+          log(`📝 Markdown retrieved (${markdown.length} chars)`);
+          alert(
+            `Markdown:\n\n${markdown.substring(0, 500)}${markdown.length > 500 ? '...' : ''}`,
+          );
+        } catch (error) {
+          log(`❌ Error: ${error.message}`);
+        }
+      }
+
+      async function getStats() {
+        if (!remote) {
+          alert('Not connected yet!');
+          return;
+        }
+        try {
+          const wordCount = await remote.getWordCount();
+          const charCount = await remote.getCharacterCount();
+          const isEmpty = await remote.isEmpty();
+          const isEditable = await remote.isEditable();
+
+          const stats =
+            `📊 Editor Statistics:\n\n` +
+            `Words: ${wordCount}\n` +
+            `Characters: ${charCount}\n` +
+            `Empty: ${isEmpty ? 'Yes' : 'No'}\n` +
+            `Editable: ${isEditable ? 'Yes' : 'No'}`;
+
+          log(`📊 Stats: ${wordCount} words, ${charCount} chars`);
+          alert(stats);
+        } catch (error) {
+          log(`❌ Error: ${error.message}`);
+        }
+      }
+
+      async function checkEmpty() {
+        if (!remote) {
+          alert('Not connected yet!');
+          return;
+        }
+        try {
+          const isEmpty = await remote.isEmpty();
+          log(`🔍 Is empty: ${isEmpty}`);
+          alert(`Editor is ${isEmpty ? 'empty' : 'not empty'}`);
+        } catch (error) {
+          log(`❌ Error: ${error.message}`);
+        }
+      }
+
+      async function setEditable(editable) {
+        if (!remote) {
+          alert('Not connected yet!');
+          return;
+        }
+        try {
+          await remote.setEditable(editable);
+          log(
+            `${editable ? '✏️' : '🔒'} Editor set to ${editable ? 'editable' : 'read-only'}`,
+          );
+        } catch (error) {
+          log(`❌ Error: ${error.message}`);
+        }
+      }
+    </script>
+  </body>
 </html>
-
