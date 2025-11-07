@@ -12,8 +12,10 @@ RUN npm ci
 # Build toàn bộ monorepo trước (cần thiết cho lexical-playground)
 RUN npm run build
 
-# Build lexical-playground với mode production
+# Build lexical-playground với mode production và base path
 WORKDIR /app/packages/lexical-playground
+ARG BASE_PATH=/lexical-playground
+ENV BASE_PATH=${BASE_PATH}
 RUN npm run build-prod
 
 # Stage 2: Serve static files với nginx

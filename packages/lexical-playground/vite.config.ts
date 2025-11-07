@@ -20,6 +20,7 @@ const require = createRequire(import.meta.url);
 
 // https://vitejs.dev/config/
 export default defineConfig(({mode}) => ({
+  base: process.env.BASE_PATH || '/',
   build: {
     outDir: 'build',
     rollupOptions: {
