@@ -5,6 +5,8 @@ services:
     image: ${DOCKERHUB_USERNAME}/${SERVICE_NAME}:latest
     container_name: ${SERVICE_NAME}
     restart: unless-stopped
+    networks:
+      - traefik_proxy
     deploy:
       resources:
         limits:

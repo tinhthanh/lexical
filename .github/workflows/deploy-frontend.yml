@@ -101,4 +101,4 @@ jobs:
             docker image prune -f
 
             echo "✅ Deployment finished successfully!"
-            echo "🌐 Service available at: http://cluster.phanmemvet.vn/${{ env.SERVICE_NAME }}"
+            echo "🌐 Service available at: http://ui.phanmemvet.vn/${{ env.SERVICE_NAME }}"
